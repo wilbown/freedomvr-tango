@@ -73,14 +73,14 @@ public class BTManager {
 		return rtn;
 	}
 	public void Scan() {
-		if (mBluetoothAdapter.isEnabled()) {
+		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
 			//TODO close any currently open bluetooth connections
 			mBluetoothAdapter.startDiscovery();
 		}
 	}
 	public int ConnectTo(String address) {
 		if (mBluetoothAdapter == null) {
-			Log.d(TAG, "Bluetooth NOT supported");
+			Log.d(TAG, "ConnectToServer Bluetooth NOT supported");
 			return 0;
 		}
 
@@ -174,14 +174,15 @@ public class BTManager {
 				Log.d(TAG, String.format("Bluetooth discovered device[%s] add[%s] class[%S]", d.getName(), d.getAddress(), c));
 				//TODO if headset and not already paired, make a connection to pair the device
 //				if (d.getName().toLowerCase().startsWith("streamz")) {
-//					//TODX show detail after successful connection
+//					//TODX send to GUI list after successful connection
+//					d.fetchUuidsWithSdp();
 //					//BTListPairedHeadphones();
+//					mBluetoothAdapter.cancelDiscovery();
 //				}
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
 				Log.d(TAG, "Bluetooth ACTION_DISCOVERY_STARTED");
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 				Log.d(TAG, "Bluetooth ACTION_DISCOVERY_FINISHED");
-
 //			} else if (BluetoothDevice.ACTION_UUID.equals(action)) {
 //				BluetoothDevice d = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 //				//ParcelUuid u = intent.getParcelableExtra(BluetoothDevice.EXTRA_UUID);
@@ -327,8 +328,6 @@ public class BTManager {
 	private static BTSocketThread BTSocket;
 	private class BTSocketThread extends Thread {
 		private final BluetoothSocket mmSocket;
-		//private final InputStream mmInStream;
-		//private final OutputStream mmOutStream;
 
 		public BTSocketThread(BluetoothSocket socket) {
 			Log.d(TAG, "BTSocketThread created");
